@@ -2,7 +2,7 @@
   "name": "@zssaer/vue3-tinymce",
   "private": false,
   "description": "Convenient TinyMCE Component For Vue 3",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "zssaer",
   "scripts": {
     "dev": "vite",
