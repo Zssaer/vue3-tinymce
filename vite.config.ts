@@ -1,30 +1,43 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import * as path from "path";
-import { resolve } from "path";
-import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from "rollup-plugin-visualizer";
+import dts from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
     rollupOptions: {
-      input: resolve(__dirname, "src/TinymceEditor.ts"),
-      // main: resolve(__dirname, "index.html"),
+      external: ["vue"],
       output: {
-        entryFileNames: "TinymceEditor.js",
         manualChunks: {
-          tinymce: ['tinymce']
+          tinymce: ["tinymce"],
         },
         chunkFileNames: "assets/tinymce.js",
+        // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
+        globals: {
+          vue: "Vue",
+        },
       },
     },
-    minify: "terser", 
+    minify: "terser",
+    lib: {
+      entry: "./packages/index.ts",
+      name: "vue3-tinymce",
+      formats: ["es"],
+      fileName: (format) => `packages/index.js`,
+    },
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
   },
-  plugins: [vue(),visualizer()],
-  
+  plugins: [
+    vue(),
+    visualizer(),
+    dts({
+      include: "packages/*.ts",
+    }),
+  ],
 });
